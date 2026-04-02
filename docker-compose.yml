@@ -1,0 +1,14 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "${PORT:-3000}:${PORT:-3000}"
+    environment:
+      PORT: ${PORT:-3000}
+      HOSTNAME: ${HOSTNAME:-0.0.0.0}
+      NEXT_PUBLIC_JIRA_DOMAIN_DEFAULT: ${NEXT_PUBLIC_JIRA_DOMAIN_DEFAULT:-}
+    restart: unless-stopped
