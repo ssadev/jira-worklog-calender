@@ -659,9 +659,10 @@ function Calendar({ creds, onLogout }) {
     return sum + entries.reduce((entrySum, entry) => entrySum + entry.timeSpentSeconds, 0);
   }, 0);
   const daysLogged = monthDays.length;
-  const ticketCount = monthDays.reduce((sum, [, entries]) => sum + entries.length, 0);
+  const ticketCount = new Set(monthDays.flatMap(([, entries]) => entries.map(e => e.issueKey))).size;
   const selectedEntries = sel ? data[sel] || [] : [];
   const selectedTotal = selectedEntries.reduce((sum, entry) => sum + entry.timeSpentSeconds, 0);
+  const selectedTicketCount = new Set(selectedEntries.map(e => e.issueKey)).size;
   const hasFetched = fetched.has(activeMonthKey);
   const allMonths = [...new Set(Object.keys(data).map((date) => date.slice(0, 7)))].sort();
 
@@ -1041,7 +1042,7 @@ function Calendar({ creds, onLogout }) {
                   </div>
                   {selectedTotal > 0 ? (
                     <div style={{ fontSize: 12, color: T.accent, marginTop: 5 }}>
-                      {fmt(selectedTotal, true)} logged · {selectedEntries.length} ticket{selectedEntries.length !== 1 ? "s" : ""}
+                      {fmt(selectedTotal, true)} logged · {selectedTicketCount} ticket{selectedTicketCount !== 1 ? "s" : ""}
                     </div>
                   ) : null}
                 </div>
